@@ -177,7 +177,7 @@ class SubsequenceStringKernel(Kernel):
         if X1.dim() > X2.dim():
             X1_shape_diff = X1.shape[: X1.dim() - X2.dim()]
             X2 = X2.expand(X1_shape_diff + X2.shape)
-        if X2.dim() > X2.dim():
+        if X2.dim() > X1.dim():
             X2_shape_diff = X2.shape[: X2.dim() - X1.dim()]
             X1 = X1.expand(X2_shape_diff + X1.shape)
 
