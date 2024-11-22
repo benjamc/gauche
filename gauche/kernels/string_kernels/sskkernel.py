@@ -79,11 +79,13 @@ class SubsequenceStringKernel(Kernel):
         _match_decay=0.2,
         _order_coefs=[1 / (2**i) for i in range(5)],
         normalize=True,
+        dtype: torch.dtype | str = torch.float,
         **kwargs,
     ):
         super().__init__(**kwargs)
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.tensor_kwargs = {"dtype": torch.float, "device": device}
+        dtype = dtype if isinstance(dtype, torch.dtype) else getattr(torch, dtype)
+        self.tensor_kwargs = {"dtype": dtype, "device": device}
         # setting up hyper-parameters of string kernel
         self.register_parameter(
             name="raw_gap_decay",
@@ -249,7 +251,7 @@ class SubsequenceStringKernel(Kernel):
         """
         S = torch.bmm(
             self.embds[s1.long()], self.embds[s2.long()].transpose(-2, -1)
-        )
+        ).to(self.tensor_kwargs["dtype"])
         assert S.shape == (s1.shape[0], s1.shape[1], s1.shape[1])
         assert S.shape == (s1.shape[0], self.maxlen, self.maxlen)
         Kp = []
