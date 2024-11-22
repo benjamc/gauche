@@ -12,3 +12,4 @@ selfies
 torch
 gpytorch
 botorch
+loguru
